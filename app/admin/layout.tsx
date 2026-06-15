@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { HousePlus } from "lucide-react";
+import { GraduationCap, Users, User, ClipboardList, LogOut } from "lucide-react";
+import { TiThMenu } from "react-icons/ti";
+import { MdGolfCourse } from "react-icons/md";
 
 export default function AdminLayout({
   children,
@@ -16,116 +18,107 @@ export default function AdminLayout({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const isAdmin = localStorage.getItem("nestuzAdmin") === "true";
+
+    const isAdmin = localStorage.getItem("role") === "admin";
+
     if (!isAdmin) {
       router.replace("/login");
     }
+
     setAuthChecked(true);
   }, [router]);
 
   const menuItems = [
     {
-      name: "Properties",
-      href: "/admin/properties",
-      icon: "🏠",
+      name: "Dashboard",
+      href: "/admin",
+      icon: TiThMenu,
     },
     {
-      name: "Add Property",
-      href: "/admin/create",
-      icon: "➕",
+      name: "Courses",
+      href: "/admin/courses",
+      icon: MdGolfCourse,
     },
     {
-      name: "Orders",
-      href: "/admin/orders",
-      icon: "📦",
+      name: "Teachers",
+      href: "/admin/teachers",
+      icon: GraduationCap,
     },
     {
-      name: "Categories",
-      href: "/admin/categories",
-      icon: "🏷️",
+      name: "Groups",
+      href: "/admin/groups",
+      icon: Users,
     },
     {
-      name: "Add Category",
-      href: "/admin/createCategory",
-      icon: "✨",
+      name: "Students",
+      href: "/admin/students",
+      icon: User,
+    },
+    {
+      name: "Applications",
+      href: "/admin/applications",
+      icon: ClipboardList,
     },
   ];
 
-  if (!authChecked) {
-    return null;
-  }
+  if (!authChecked) return null;
 
   return (
-    <div className="flex min-h-screen bg-[#050816] text-white">
-      
+    <div className="flex min-h-screen bg-gray-50">
+
       {/* SIDEBAR */}
-      <aside className="fixed left-0 top-0 flex h-screen w-60 flex-col border-r border-white/10 bg-black/70 p-4 backdrop-blur-3xl">
-        
+      <aside className="fixed left-0 top-0 h-screen w-64 border-r border-gray-200 bg-white p-5">
+
         {/* LOGO */}
-        <div className="flex items-center gap-3">
-          
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/30">
-            <HousePlus size={24} />
-          </div>
-
-          <div>
-            <h2 className="text-xl font-black">
-              NestUz
-            </h2>
-
-            <p className="text-xs text-gray-400">
-              Admin Dashboard
-            </p>
-          </div>
+        <div className="mb-10">
+          <h1 className="text-2xl font-black">
+            <span className="text-green-500">IT</span> ZONE
+          </h1>
+          <p className="text-sm text-gray-500">
+            Admin Dashboard
+          </p>
         </div>
 
         {/* MENU */}
-        <nav className="mt-10 flex flex-col gap-2">
+        <nav className="flex flex-col gap-2">
           {menuItems.map((item) => {
             const active = pathname === item.href;
+            const Icon = item.icon;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-decoration-none transition-all duration-300 ${
+                className={`flex items-center text-decoration-none gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all ${
                   active
-                    ? "bg-linear-to-r from-cyan-400 to-blue-600 text-white shadow-lg shadow-cyan-500/20"
-                    : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white"
+                    ? "bg-green-500 text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-100!"
                 }`}
               >
-                <span className="text-lg">
-                  {item.icon}
-                </span>
-
-                <span className="text-sm font-medium">
-                  {item.name}
-                </span>
+                <Icon size={18} />
+                {item.name}
               </Link>
             );
           })}
         </nav>
 
         {/* LOGOUT */}
-        <div className="mt-auto">
-          
+        <div className="absolute bottom-6">
           <button
             onClick={() => {
-              localStorage.removeItem("nestuzAdmin");
-              router.push("/");
+              localStorage.removeItem("role");
+              router.push("/login");
             }}
-            className="flex h-12 w-full items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 text-sm font-semibold text-red-400 transition hover:bg-red-500 hover:text-white"
+            className="flex w-100 items-center justify-center gap-2 rounded-2xl! bg-red-50 px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-500 hover:text-white"
           >
+            <LogOut size={18} />
             Logout
           </button>
         </div>
-
-        {/* GLOW */}
-        <div className="absolute bottom-0 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full bg-cyan-500/20 blur-[80px]" />
       </aside>
 
       {/* CONTENT */}
-      <main className="ml-60 w-full p-6">
+      <main className="ml-64 w-full p-6">
         {children}
       </main>
     </div>
