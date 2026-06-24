@@ -203,10 +203,10 @@
           "name": "Akbar Sardorov",
           "phone": "12 234 23 23",
           "attendance": [
-            false,
-            false,
-            false,
-            false,
+            true,
+            true,
+            true,
+            true,
             false,
             false,
             false,
@@ -220,9 +220,9 @@
             false
           ],
           "payments": [
-            false,
-            false,
-            false,
+            true,
+            true,
+            true,
             false,
             false,
             false,
@@ -301,6 +301,13 @@
       "phone": "91 234 56 78",
       "courseTitle": "Backend",
       "date": "2026-06-15"
+    },
+    {
+      "id": "adPVNv_OWC8",
+      "name": "Akbar Xamidov",
+      "phone": "91 243 56 78",
+      "courseTitle": "Backend",
+      "date": "2026-06-22"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -1,6 +1,7 @@
 "use client";
 
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 
@@ -48,13 +49,13 @@ const Section = () => {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
+          {courses.map((course, index) => (
             <div
               key={course.id}
               className="group rounded-3xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
             >
               <div className="mb-5 inline-flex rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-600">
-                #{course.id}
+                #{index + 1}
               </div>
 
               <h3 className="mb-4 text-2xl font-bold text-gray-900">
@@ -65,10 +66,12 @@ const Section = () => {
                 {course.description}
               </p>
 
+            <Link href="/courses" className="text-decoration-none">
               <button className="flex items-center gap-2 font-semibold text-green-500 transition-all duration-300 group-hover:gap-4">
                 Learn More
                 <FaArrowRight />
               </button>
+            </Link>
             </div>
           ))}
         </div>

@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaEdit, FaPlus, FaTrash, FaUsers } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 
 interface Student {
   id: number;
@@ -24,9 +25,9 @@ interface Group {
 }
 
 interface Teacher {
-  id: number | string;
+  id: number;
   name: string;
-  groups?: {
+  groups: {
     groupId: string;
     groupName: string;
     course: string;
@@ -70,8 +71,8 @@ export default function Page() {
     setTeachers(res.data);
   };
 
-  const syncTeacherGroups = async (teacherId: number | string, group: Group) => {
-    const teacher = teachers.find((t) => String(t.id) === String(teacherId));
+  const syncTeacherGroups = async (teacherId: number, group: Group) => {
+    const teacher = teachers.find((t) => t.id === teacherId);
     if (!teacher) return;
 
     const exists = teacher.groups?.some((g) => g.groupId === group.id);
@@ -107,15 +108,10 @@ export default function Page() {
 
   // CREATE / UPDATE GROUP
   const handleSubmit = async () => {
-    if (!form.name.trim() || form.teacherId === "" || !form.course.trim())
+    if (!form.name || !form.teacher || !form.course)
       return alert("Fill all fields");
 
-    const teacherId =
-      form.teacherId === ""
-        ? null
-        : isNaN(Number(form.teacherId))
-        ? form.teacherId
-        : Number(form.teacherId);
+    const teacherId = form.teacherId ? Number(form.teacherId) : null;
 
     let groupId = editId || Math.random().toString(36).substring(2, 10);
 
@@ -216,7 +212,7 @@ export default function Page() {
           onClick={() => setModalOpen(true)}
           className="rounded-xl! flex justify-center items-center gap-2 bg-green-500 px-4 py-2 text-white"
         >
-          <FaPlus /> Group
+          <FaPlus /> Add Group
         </button>
       </div>
 
@@ -278,10 +274,10 @@ export default function Page() {
               />
 
               <select
-                className="w-full rounded-xl border mt-2 mb-2 p-2"
+                className="w-full mt-2 mb-2 rounded-xl border p-2"
                 value={form.teacherId}
                 onChange={(e) => {
-                  const t = teachers.find((x) => String(x.id) === e.target.value);
+                  const t = teachers.find((x) => x.id === Number(e.target.value));
 
                   setForm({
                     ...form,
@@ -319,7 +315,7 @@ export default function Page() {
                 onChange={(e) => setForm({ ...form, duration: e.target.value })}
               />
 
-              <div className="flex justify-end mt-3 gap-2">
+              <div className="flex mt-3 justify-end gap-2">
                 <button onClick={resetForm} className="rounded-xl! bg-gray-200 px-4 py-2">
                   Cancel
                 </button>
@@ -338,20 +334,18 @@ export default function Page() {
       {studentsModal && selectedGroup && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4">
           <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white p-6">
+            <div className="flex items-center justify-between mb-4">
+            <h2 className="mb-4 text-xl font-bold">
+              {selectedGroup.name} Students
+            </h2>
 
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold">{selectedGroup.name} Students</h2>
-
-              <button
-                onClick={() => {
-                  setStudentsModal(false);
-                  setSelectedGroup(null);
-                }}
-                className="rounded-xl! bg-gray-200 px-4 py-2"
-              >
-                Close
-              </button>
-            </div>
+            <button
+    onClick={() => setStudentsModal(false)}
+    className="px-4 py-2 font-medium"
+  >
+    <FaTimes size={26} />
+  </button>
+  </div>
 
             <div className="flex gap-2 mb-4">
               <input
